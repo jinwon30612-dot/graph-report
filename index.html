@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>우당탕탕 막대그래프 보고서 만들기 📊</title>
+  <!-- Google Fonts - NanumSquareRound 대체 및 Pretendard & Gowun Dodum 로드 -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+  <!-- html2canvas CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- 상단 헤더 -->
+    <header class="app-header">
+      <h1 class="app-title">📊 나만의 막대그래프 보고서 만들기</h1>
+      <p class="app-subtitle">조사한 자료를 멋진 막대그래프로 만들고 보고서로 완성해 봐요!</p>
+      
+      <!-- 단계 인디케이터 -->
+      <div class="step-indicator">
+        <div class="step-dot active" id="dot-1">
+          <span class="step-num">1</span>
+          <span class="step-text">자료 입력하기</span>
+        </div>
+        <div class="step-line" id="line-1"></div>
+        <div class="step-dot" id="dot-2">
+          <span class="step-num">2</span>
+          <span class="step-text">그래프 모양 잡기</span>
+        </div>
+        <div class="step-line" id="line-2"></div>
+        <div class="step-dot" id="dot-3">
+          <span class="step-num">3</span>
+          <span class="step-text">그래프 꾸미기</span>
+        </div>
+        <div class="step-line" id="line-3"></div>
+        <div class="step-dot" id="dot-4">
+          <span class="step-num">4</span>
+          <span class="step-text">보고서 완성하기</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 메인 슬라이드 컨테이너 -->
+    <main class="slider-viewport">
+      <div class="slider-wrapper" id="slider-wrapper">
+        
+        <!-- Step 1: 자료 입력 (표) -->
+        <section class="step-slide" id="step-1-slide">
+          <div class="card">
+            <div class="card-header bg-pastel-blue">
+              <span class="card-icon">✍️</span>
+              <h2>1단계: 조사한 자료를 표에 입력해요</h2>
+            </div>
+            <div class="card-body">
+              <div class="input-group-row">
+                <div class="input-field-wrapper">
+                  <label for="input-title" class="input-label">📝 조사 주제</label>
+                  <input type="text" id="input-title" placeholder="예) 우리 반 학생들이 좋아하는 과일" value="예) 우리 반 학생들이 좋아하는 과일">
+                </div>
+                <div class="input-field-wrapper unit-wrapper">
+                  <label for="input-unit" class="input-label">🏷️ 수량 단위</label>
+                  <input type="text" id="input-unit" placeholder="예) 명, 개, 권 등" value="예) 명">
+                </div>
+              </div>
+              <div class="input-group-row">
+                <div class="input-field-wrapper">
+                  <label for="input-qty-axis-name" class="input-label">📊 수량을 나타내는 축 이름</label>
+                  <input type="text" id="input-qty-axis-name" placeholder="예) 학생 수, 물건 수 등" value="예) 학생 수">
+                </div>
+                <div class="input-field-wrapper">
+                  <label for="input-item-axis-name" class="input-label">🍎 항목을 나타내는 축 이름</label>
+                  <input type="text" id="input-item-axis-name" placeholder="예) 과일, 운동, 과목 등" value="예) 과일">
+                </div>
+              </div>
+
+              <!-- 데이터 입력 테이블 -->
+              <div class="table-container">
+                <table class="data-table" id="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 10%;">번호</th>
+                      <th style="width: 45%;">조사한 항목 (이름)</th>
+                      <th style="width: 30%;">수량 (숫자)</th>
+                      <th style="width: 15%;">지우기</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body">
+                    <!-- 기본 행 3개 제공 -->
+                    <tr class="table-row">
+                      <td class="row-num">1</td>
+                      <td><input type="text" class="item-name" placeholder="예) 사과" value="예) 사과"></td>
+                      <td><input type="number" class="item-value" placeholder="예) 8" min="0" value="8"></td>
+                      <td><button type="button" class="btn-delete" onclick="deleteRow(this)">🗑️</button></td>
+                    </tr>
+                    <tr class="table-row">
+                      <td class="row-num">2</td>
+                      <td><input type="text" class="item-name" placeholder="예) 바나나" value="예) 바나나"></td>
+                      <td><input type="number" class="item-value" placeholder="예) 5" min="0" value="5"></td>
+                      <td><button type="button" class="btn-delete" onclick="deleteRow(this)">🗑️</button></td>
+                    </tr>
+                    <tr class="table-row">
+                      <td class="row-num">3</td>
+                      <td><input type="text" class="item-name" placeholder="예) 딸기" value="예) 딸기"></td>
+                      <td><input type="number" class="item-value" placeholder="예) 12" min="0" value="12"></td>
+                      <td><button type="button" class="btn-delete" onclick="deleteRow(this)">🗑️</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="table-actions">
+                <button type="button" class="btn-add-row" id="btn-add-row">
+                  <span class="plus-icon">➕</span> 항목 추가하기
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 2: 그래프 모양 잡기 -->
+        <section class="step-slide" id="step-2-slide">
+          <div class="step-2-layout">
+            
+            <!-- 왼쪽: 그래프 모양 설정 패널 -->
+            <div class="card config-panel">
+              <div class="card-header bg-pastel-green">
+                <span class="card-icon">📐</span>
+                <h2>2단계: 그래프 모양을 잡아요</h2>
+              </div>
+              <div class="card-body">
+                <!-- 막대 방향 설정 -->
+                <div class="config-section">
+                  <h3 class="config-title">📐 막대 방향</h3>
+                  <div class="toggle-container">
+                    <button type="button" class="btn-toggle active" id="btn-dir-vertical">
+                      <span class="toggle-icon">📊</span> 세로 막대
+                    </button>
+                    <button type="button" class="btn-toggle" id="btn-dir-horizontal">
+                      <span class="toggle-icon">📈</span> 가로 막대
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 눈금 한 칸의 크기 설정 -->
+                <div class="config-section grid-size-section">
+                  <div class="grid-size-left">
+                    <h3 class="config-title">📏 눈금 한 칸의 크기 (1칸의 값)</h3>
+                    <div class="grid-size-selector">
+                      <label class="radio-btn">
+                        <input type="radio" name="grid-size" value="1" checked>
+                        <span>1</span>
+                      </label>
+                      <label class="radio-btn">
+                        <input type="radio" name="grid-size" value="2">
+                        <span>2</span>
+                      </label>
+                      <label class="radio-btn">
+                        <input type="radio" name="grid-size" value="5">
+                        <span>5</span>
+                      </label>
+                      <label class="radio-btn">
+                        <input type="radio" name="grid-size" value="10">
+                        <span>10</span>
+                      </label>
+                      <label class="radio-btn">
+                        <input type="radio" name="grid-size" value="20">
+                        <span>20</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="think-box">
+                    <h4 class="think-box-title">💡 생각해 보세요!</h4>
+                    <div class="think-box-content">
+                      <p><strong>너무 작게 하면 (예: 1):</strong> 수량을 정확히 나타낼 수 있지만, 눈금선이 많아져 복잡해 보여요.</p>
+                      <p><strong>너무 크게 하면 (예: 10):</strong> 그래프가 깔끔해 보이지만, 정확한 값을 한눈에 읽기 어려워요.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 오른쪽: 실시간 그래프 미리보기 영역 -->
+            <div class="card graph-preview-panel">
+              <div class="card-header bg-pastel-yellow">
+                <span class="card-icon">👀</span>
+                <h2>실시간 그래프 미리보기</h2>
+              </div>
+              <div class="card-body flex-center">
+                <!-- 실시간 그래프 컴포넌트 래퍼 -->
+                <div class="graph-wrapper preview-graph-wrapper" id="preview-graph-wrapper-step2">
+                  <div class="graph-title-label">우리 반 학생들이 좋아하는 과일</div>
+                  
+                  <!-- 눈금선이 들어갈 핵심 모눈 그래프 판 -->
+                  <div class="graph-container-outer">
+                    <div class="graph-unit-label">(단위: 명)</div>
+                    <!-- Y축/X축 명을 나타내는 대각선 코너 박스 -->
+                    <div class="axis-corner-box">
+                      <svg class="corner-svg" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 100 100">
+                        <line x1="0" y1="100" x2="100" y2="0" stroke="var(--gray-800)" stroke-width="3" />
+                      </svg>
+                      <span class="corner-label vertical-name">학생 수</span>
+                      <span class="corner-label horizontal-name">과일</span>
+                    </div>
+                    <div class="y-axis-labels-container"></div>
+                    <div class="graph-container bg-white">
+                      <!-- 모눈 격자 배경 -->
+                      <div class="grid-lines"></div>
+                      <!-- 막대 바들이 생성될 레이어 -->
+                      <div class="bars-layer"></div>
+                    </div>
+                    <div class="x-axis-labels-container"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Step 3: 그래프 꾸미기 -->
+        <section class="step-slide" id="step-3-slide">
+          <div class="step-2-layout">
+            
+            <!-- 왼쪽: 그래프 꾸미기 설정 패널 -->
+            <div class="card config-panel">
+              <div class="card-header bg-pastel-green">
+                <span class="card-icon">🎨</span>
+                <h2>3단계: 그래프를 예쁘게 꾸며요</h2>
+              </div>
+              <div class="card-body">
+                <!-- 막대 두께 조절 -->
+                <div class="config-section">
+                  <h3 class="config-title">📏 막대 두께</h3>
+                  <div class="slider-field">
+                    <input type="range" id="slider-bar-width" min="20" max="80" value="50">
+                    <span id="bar-width-val">보통</span>
+                  </div>
+                </div>
+
+                <!-- 막대 색상 꾸미기 (항목별로 각각 지정할 수 있게 자동 생성됨) -->
+                <div class="config-section">
+                  <h3 class="config-title">🎨 막대 색상 고르기</h3>
+                  <div class="color-picker-list" id="color-picker-list">
+                    <!-- 자바스크립트로 항목별 색상 변경 칩들이 동적 생성됩니다 -->
+                  </div>
+                </div>
+
+                <!-- 그래프 배경색 -->
+                <div class="config-section">
+                  <h3 class="config-title">🖼️ 그래프 배경 스타일</h3>
+                  <div class="bg-selector">
+                    <button type="button" class="btn-bg-color active" data-bg="bg-white" style="background-color: #ffffff; border: 2px solid #ccc;"></button>
+                    <button type="button" class="btn-bg-color" data-bg="bg-cream" style="background-color: #fdfaf2;"></button>
+                    <button type="button" class="btn-bg-color" data-bg="bg-mint" style="background-color: #f2faf8;"></button>
+                    <button type="button" class="btn-bg-color" data-bg="bg-sky" style="background-color: #f2f7fa;"></button>
+                    <button type="button" class="btn-bg-color" data-bg="bg-pink" style="background-color: #faf2f6;"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 오른쪽: 실시간 그래프 미리보기 영역 -->
+            <div class="card graph-preview-panel">
+              <div class="card-header bg-pastel-yellow">
+                <span class="card-icon">👀</span>
+                <h2>실시간 그래프 미리보기</h2>
+              </div>
+              <div class="card-body flex-center">
+                <!-- 실시간 그래프 컴포넌트 래퍼 -->
+                <div class="graph-wrapper preview-graph-wrapper" id="preview-graph-wrapper-step3">
+                  <div class="graph-title-label">우리 반 학생들이 좋아하는 과일</div>
+                  
+                  <!-- 눈금선이 들어갈 핵심 모눈 그래프 판 -->
+                  <div class="graph-container-outer">
+                    <div class="graph-unit-label">(단위: 명)</div>
+                    <!-- Y축/X축 명을 나타내는 대각선 코너 박스 -->
+                    <div class="axis-corner-box">
+                      <svg class="corner-svg" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 100 100">
+                        <line x1="0" y1="100" x2="100" y2="0" stroke="var(--gray-800)" stroke-width="3" />
+                      </svg>
+                      <span class="corner-label vertical-name">학생 수</span>
+                      <span class="corner-label horizontal-name">과일</span>
+                    </div>
+                    <div class="y-axis-labels-container"></div>
+                    <div class="graph-container bg-white">
+                      <!-- 모눈 격자 배경 -->
+                      <div class="grid-lines"></div>
+                      <!-- 막대 바들이 생성될 레이어 -->
+                      <div class="bars-layer"></div>
+                    </div>
+                    <div class="x-axis-labels-container"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Step 4: 보고서 작성 및 완성 -->
+        <section class="step-slide" id="step-4-slide">
+          <div class="step-3-layout">
+            
+            <!-- 최종 보고서 출력 영역 (이 부분만 캡처하여 저장합니다) -->
+            <div class="report-capture-card" id="report-capture-area">
+              <div class="report-header">
+                <div class="report-ribbon">✏️ 수학 탐구 보고서</div>
+                <h1 class="report-main-title" id="report-title-display">우리 반 학생들이 좋아하는 과일</h1>
+                <div class="report-meta">
+                  <span class="meta-item"><strong>소속:</strong> <input type="text" class="inline-meta-input" placeholder="학급 입력 (예: 4학년 3반)" value="예) 4학년 3반"></span>
+                  <span class="meta-item"><strong>이름:</strong> <input type="text" class="inline-meta-input" placeholder="이름 입력" value="예) 김사랑"></span>
+                  <span class="meta-item"><strong>날짜:</strong> <input type="text" class="inline-meta-input" id="report-date" value="2026-06-29"></span>
+                </div>
+              </div>
+
+              <div class="report-body">
+                <!-- 조사 계획 영역 (빈칸 채우기) -->
+                <div class="report-section plan-section">
+                  <h3 class="section-title"><span class="section-title-icon">📌</span> 1. 조사 계획 세우기</h3>
+                  <div class="plan-grid">
+                    <div class="plan-item">
+                      <span class="plan-label">조사 목적</span>
+                      <input type="text" class="plan-input" placeholder="예) 우리 반 친구들이 가장 좋아하는 과일이 무엇인지 알아보려고" value="예) 우리 반 친구들이 가장 좋아하는 과일이 무엇인지 알아보기 위해">
+                    </div>
+                    <div class="plan-item">
+                      <span class="plan-label">조사 대상</span>
+                      <input type="text" class="plan-input" placeholder="예) 우리 반 친구들 25명" value="예) 우리 반 친구들 모두">
+                    </div>
+                    <div class="plan-item">
+                      <span class="plan-label">조사 기간</span>
+                      <input type="text" class="plan-input" placeholder="예) 2026년 6월 30일부터 7월 1일" value="예) 2026년 6월 30일부터 7월 1일">
+                    </div>
+                    <div class="plan-item">
+                      <span class="plan-label">조사 방법</span>
+                      <input type="text" class="plan-input" placeholder="예) 설문지 스티커 붙이기, 거수로 조사 등" value="예) 칠판에 붙인 과일 그림에 붙임쪽지 붙이기">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 막대그래프 삽입 영역 -->
+                <div class="report-section graph-section">
+                  <h3 class="section-title"><span class="section-title-icon">📊</span> 2. 조사한 자료를 막대그래프로 나타내기</h3>
+                  <div class="report-graph-holder" id="report-graph-holder">
+                    <!-- 2단계의 그래프가 자바스크립트에 의해 그대로 복사/복제되어 이곳에 렌더링됩니다 -->
+                  </div>
+                </div>
+
+                <!-- 조사 후 알게 된 점 (서술형) -->
+                <div class="report-section analysis-section">
+                  <h3 class="section-title"><span class="section-title-icon">💡</span> 3. 조사하여 알게 된 점 및 느낀 점</h3>
+                  <div class="analysis-body">
+                    <textarea class="analysis-textarea" id="analysis-textarea" placeholder="막대그래프를 보고 알게 된 점을 자세히 써 봐요. 
+예) 
+- 사과를 좋아하는 학생이 8명으로 가장 많습니다.
+- 바나나를 좋아하는 학생이 5명으로 가장 적습니다.
+- 막대그래프를 직접 그려보니 한눈에 어떤 과일이 인기가 많은지 쉽게 알아볼 수 있어서 편리했습니다."></textarea>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="report-footer">
+                <p>멋지게 완성된 보고서입니다! 패들릿에 공유하여 친구들과 비교해 봐요. 🎉</p>
+              </div>
+            </div>
+            
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- 하단 내비게이션 바 -->
+    <footer class="app-navigation">
+      <div class="nav-left">
+        <button type="button" class="btn-nav btn-prev" id="btn-prev" style="display: none;">
+          <span class="arrow">◀</span> 이전 단계로
+        </button>
+      </div>
+      
+      <div class="nav-center">
+        <!-- 3단계에서 노출될 특수 기능 버튼들 -->
+        <div class="step3-actions" id="step3-actions" style="display: none;">
+          <button type="button" class="btn-action btn-save" id="btn-save-report">
+            <span class="action-icon">💾</span> 보고서 완성 및 저장
+          </button>
+          <button type="button" class="btn-action btn-padlet" id="btn-go-padlet">
+            <span class="action-icon">🔗</span> 패들릿에 공유하기
+          </button>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <button type="button" class="btn-nav btn-next" id="btn-next">
+          다음 단계로 <span class="arrow">▶</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 초등학생 맞춤 커스텀 알림/경고 모달창 -->
+  <div class="custom-modal-backdrop" id="alert-modal">
+    <div class="custom-modal">
+      <div class="modal-header">
+        <span class="modal-emoji">😮</span>
+        <h3>확인해 주세요!</h3>
+      </div>
+      <div class="modal-body">
+        <p id="alert-message">조사 주제를 입력해 주세요.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-close" id="btn-modal-close">알았어요!</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
