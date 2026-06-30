@@ -60,56 +60,28 @@
               <div class="input-group-row">
                 <div class="input-field-wrapper">
                   <label for="input-title" class="input-label">📝 조사 주제</label>
-                  <input type="text" id="input-title" placeholder="예) 우리 반 학생들이 좋아하는 과일" value="예) 우리 반 학생들이 좋아하는 과일">
+                  <input type="text" id="input-title" placeholder="예) 주로 음악을 듣는 장소별 학생 수" value="주로 음악을 듣는 장소별 학생 수">
                 </div>
                 <div class="input-field-wrapper unit-wrapper">
                   <label for="input-unit" class="input-label">🏷️ 수량 단위</label>
-                  <input type="text" id="input-unit" placeholder="예) 명, 개, 권 등" value="예) 명">
+                  <input type="text" id="input-unit" placeholder="예) 명, 개, 권 등" value="명">
                 </div>
               </div>
               <div class="input-group-row">
                 <div class="input-field-wrapper">
                   <label for="input-qty-axis-name" class="input-label">📊 수량을 나타내는 축 이름</label>
-                  <input type="text" id="input-qty-axis-name" placeholder="예) 학생 수, 물건 수 등" value="예) 학생 수">
+                  <input type="text" id="input-qty-axis-name" placeholder="예) 학생 수, 물건 수 등" value="학생 수">
                 </div>
                 <div class="input-field-wrapper">
                   <label for="input-item-axis-name" class="input-label">🍎 항목을 나타내는 축 이름</label>
-                  <input type="text" id="input-item-axis-name" placeholder="예) 과일, 운동, 과목 등" value="예) 과일">
+                  <input type="text" id="input-item-axis-name" placeholder="예) 과일, 운동, 과목 등" value="장소">
                 </div>
               </div>
 
               <!-- 데이터 입력 테이블 -->
               <div class="table-container">
                 <table class="data-table" id="data-table">
-                  <thead>
-                    <tr>
-                      <th style="width: 10%;">번호</th>
-                      <th style="width: 45%;">조사한 항목 (이름)</th>
-                      <th style="width: 30%;">수량 (숫자)</th>
-                      <th style="width: 15%;">지우기</th>
-                    </tr>
-                  </thead>
-                  <tbody id="table-body">
-                    <!-- 기본 행 3개 제공 -->
-                    <tr class="table-row">
-                      <td class="row-num">1</td>
-                      <td><input type="text" class="item-name" placeholder="예) 사과" value="예) 사과"></td>
-                      <td><input type="number" class="item-value" placeholder="예) 8" min="0" value="8"></td>
-                      <td><button type="button" class="btn-delete" onclick="deleteRow(this)">🗑️</button></td>
-                    </tr>
-                    <tr class="table-row">
-                      <td class="row-num">2</td>
-                      <td><input type="text" class="item-name" placeholder="예) 바나나" value="예) 바나나"></td>
-                      <td><input type="number" class="item-value" placeholder="예) 5" min="0" value="5"></td>
-                      <td><button type="button" class="btn-delete" onclick="deleteRow(this)">🗑️</button></td>
-                    </tr>
-                    <tr class="table-row">
-                      <td class="row-num">3</td>
-                      <td><input type="text" class="item-name" placeholder="예) 딸기" value="예) 딸기"></td>
-                      <td><input type="number" class="item-value" placeholder="예) 12" min="0" value="12"></td>
-                      <td><button type="button" class="btn-delete" onclick="deleteRow(this)">🗑️</button></td>
-                    </tr>
-                  </tbody>
+                  <!-- 자바스크립트로 동적 생성됩니다 -->
                 </table>
               </div>
 
@@ -255,16 +227,11 @@
                 <div class="config-section">
                   <h3 class="config-title">🖼️ 그래프 배경 스타일</h3>
                   <div class="bg-selector">
-                    <button type="button" class="btn-bg-color active" data-bg="bg-white"
-                      style="background-color: #ffffff; border: 2px solid #ccc;"></button>
-                    <button type="button" class="btn-bg-color" data-bg="bg-cream"
-                      style="background-color: #fdfaf2;"></button>
-                    <button type="button" class="btn-bg-color" data-bg="bg-mint"
-                      style="background-color: #f2faf8;"></button>
-                    <button type="button" class="btn-bg-color" data-bg="bg-sky"
-                      style="background-color: #f2f7fa;"></button>
-                    <button type="button" class="btn-bg-color" data-bg="bg-pink"
-                      style="background-color: #faf2f6;"></button>
+                    <button type="button" class="btn-bg-color active bg-white" data-bg="bg-white"></button>
+                    <button type="button" class="btn-bg-color bg-cream" data-bg="bg-cream"></button>
+                    <button type="button" class="btn-bg-color bg-mint" data-bg="bg-mint"></button>
+                    <button type="button" class="btn-bg-color bg-sky" data-bg="bg-sky"></button>
+                    <button type="button" class="btn-bg-color bg-pink" data-bg="bg-pink"></button>
                   </div>
                 </div>
               </div>

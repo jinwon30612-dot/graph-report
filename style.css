@@ -358,36 +358,66 @@ input.example-val, textarea.example-val {
 .data-table th, .data-table td {
   padding: 12px 16px;
   border-bottom: 2px solid var(--gray-200);
+  border-right: 2px solid var(--gray-200);
 }
 
-.data-table th {
+.data-table th:last-child, .data-table td:last-child {
+  border-right: none;
+}
+
+.table-title-cell {
+  background-color: #ffffff;
+  font-family: var(--font-fancy);
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--gray-800);
+  padding: 14px;
+}
+
+.table-axis-label, .table-action-label, .table-sum-label {
   background-color: var(--gray-100);
   font-family: var(--font-fancy);
   font-weight: bold;
   color: var(--gray-800);
+  min-width: 130px;
 }
 
-.data-table tr:last-child td {
-  border-bottom: none;
-}
-
-.row-num {
+.table-sum-value {
   font-family: var(--font-jua);
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   color: var(--primary-color);
+  background-color: var(--pastel-blue);
+  font-weight: bold;
 }
 
-.btn-delete {
+.data-table input[type="text"], .data-table input[type="number"] {
+  padding: 8px 12px;
+  font-size: 1rem;
+  text-align: center;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.data-table input[type="text"]:focus, .data-table input[type="number"]:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(162, 155, 254, 0.2);
+  outline: none;
+}
+
+.btn-delete-col {
   background: none;
   border: none;
   font-size: 1.4rem;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 50%;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
   transition: all 0.2s ease;
 }
 
-.btn-delete:hover {
+.btn-delete-col:hover {
   background-color: #fff0f0;
   transform: scale(1.15);
 }
@@ -626,6 +656,10 @@ input.example-val, textarea.example-val {
   transition: all 0.2s ease;
 }
 
+.btn-bg-color.bg-white {
+  border: 2px solid var(--gray-200);
+}
+
 .btn-bg-color:hover {
   transform: scale(1.1);
 }
@@ -638,10 +672,10 @@ input.example-val, textarea.example-val {
 
 /* 그래프 백그라운드 매칭용 클래스 */
 .bg-white { background-color: #ffffff !important; }
-.bg-cream { background-color: #fdfaf2 !important; }
-.bg-mint { background-color: #f2faf8 !important; }
-.bg-sky { background-color: #f2f7fa !important; }
-.bg-pink { background-color: #faf2f6 !important; }
+.bg-cream { background-color: #fbf5e1 !important; }
+.bg-mint { background-color: #e7f7f2 !important; }
+.bg-sky { background-color: #e7f2f8 !important; }
+.bg-pink { background-color: #f9e7f1 !important; }
 
 /* -------------------------------------------------------------
    7. 막대그래프 컴포넌트 핵심 디자인
@@ -719,7 +753,7 @@ input.example-val, textarea.example-val {
   display: grid;
   border: 2px solid var(--gray-800);
   box-sizing: border-box;
-  background-color: #ffffff;
+  background-color: transparent;
 }
 
 /* Y축 라벨 컨테이너 (그리드 배치) */
@@ -751,7 +785,7 @@ input.example-val, textarea.example-val {
   height: 100%;
   border-top: 2px solid var(--gray-800);
   border-right: 2px solid var(--gray-800);
-  background-color: #ffffff;
+  background-color: transparent;
   box-sizing: border-box;
   z-index: 10;
 }
@@ -827,6 +861,7 @@ input.example-val, textarea.example-val {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+  background-color: transparent;
 }
 
 /* 짙고 명확한 모눈 격자선 레이어 */

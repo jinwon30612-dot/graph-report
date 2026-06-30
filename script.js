@@ -32,11 +32,15 @@ const state = {
   gridSize: 1,                // 눈금 한 칸의 크기 (1, 2, 5, 10, 20 등)
   barWidth: 50,               // 막대 두께 (20 ~ 80px)
   bgClass: "bg-white",        // 그래프 배경 스타일 클래스
-  data: [],                   // 1단계에서 가져온 [{ name, value, color }] 형태의 데이터
-  title: "",                  // 조사 주제
-  unit: "",                   // 수량 단위
+  data: [
+    { name: "집", value: 4, color: "#ffb3ba" },
+    { name: "공원", value: 6, color: "#ffdfba" },
+    { name: "버스", value: 10, color: "#ffffba" }
+  ],                          // 1단계에서 가져온 [{ name, value, color }] 형태의 데이터
+  title: "주로 음악을 듣는 장소별 학생 수", // 조사 주제
+  unit: "명",                 // 수량 단위
   qtyAxisName: "학생 수",       // 수량 축 이름
-  itemAxisName: "과일"         // 항목 축 이름
+  itemAxisName: "장소"         // 항목 축 이름
 };
 
 /**
@@ -99,12 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.target.classList.add("active");
 
       const selectedBg = e.target.getAttribute("data-bg");
-      const graphContainer = document.getElementById("main-graph-container");
-
-      // 기존 배경 클래스 제거 후 새 배경 적용
-      graphContainer.classList.remove(state.bgClass);
-      graphContainer.classList.add(selectedBg);
       state.bgClass = selectedBg;
+      renderGraph();
     });
   });
 
@@ -117,8 +117,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // 모달 닫기
   document.getElementById("btn-modal-close").addEventListener("click", closeModal);
 
-  // 테이블 내 인풋 변경 시 실시간 그래프 데이터 반영 (1단계에서도 미리 데이터 로직 연결)
-  attachTableInputListeners();
+  // 1단계: 표 초기 렌더링 및 메타 입력 연동
+  renderInputTable();
+  const metaInputs = ["input-title", "input-unit", "input-qty-axis-name", "input-item-axis-name"];
+  metaInputs.forEach(id => {
+    document.getElementById(id).addEventListener("input", updateTableLabels);
+  });
 
   // '예) ...' 형태의 예시 텍스트 포커스 시 자동 삭제 및 블러 시 복원 기능
   document.addEventListener("focusin", (e) => {
@@ -171,98 +175,200 @@ function updateExampleStyle(input) {
 
 /**
  * ============================================================================
- * 3. 1단계: 표 행 추가 / 삭제 및 이벤트 연결
+ * 3. 1단계: 표 가로형 동적 렌더링 및 입력값 연동
  * ============================================================================
  */
-function attachTableInputListeners() {
-  const inputs = document.querySelectorAll("#data-table input");
-  inputs.forEach(input => {
-    input.addEventListener("input", () => {
-      // 실시간 데이터 동기화
-      syncDataFromTable();
+
+// 1단계 가로형 표 동적 렌더링 함수
+function renderInputTable() {
+  const table = document.getElementById("data-table");
+  if (!table) return;
+
+  const N = state.data.length;
+  const colCount = N + 2; // 축 라벨 + N개 항목 + 합계
+
+  // 합계 자동 연산
+  const sumValue = state.data.reduce((acc, curr) => acc + (curr.value || 0), 0);
+
+  let html = "";
+
+  // 1행: 조사 주제 (가로 전체 병합)
+  const displayTitle = state.title || "조사 주제를 입력하세요";
+  html += `
+    <tr class="table-title-row">
+      <th colspan="${colCount}" class="table-title-cell" id="table-title-cell-display">${displayTitle}</th>
+    </tr>
+  `;
+
+  // 2행: 조사한 항목 이름 (장소 | 집 | 공원 | 버스 | 합계)
+  const displayItemAxis = state.itemAxisName || "항목";
+  html += `
+    <tr class="table-item-row">
+      <td class="table-axis-label" id="table-item-axis-display">${displayItemAxis}</td>
+  `;
+  state.data.forEach((item, idx) => {
+    html += `
+      <td>
+        <input type="text" class="item-name" data-idx="${idx}" placeholder="예) 항목 ${idx + 1}" value="${item.name}">
+      </td>
+    `;
+  });
+  html += `
+      <td class="table-sum-label">합계</td>
+    </tr>
+  `;
+
+  // 3행: 수량 (학생 수(명) | 4 | 6 | 10 | 20)
+  const qtyName = state.qtyAxisName || "수량";
+  const unitStr = state.unit ? `(${state.unit})` : "";
+  const displayQtyAxis = `${qtyName}${unitStr}`;
+  html += `
+    <tr class="table-value-row">
+      <td class="table-axis-label" id="table-qty-axis-display">${displayQtyAxis}</td>
+  `;
+  state.data.forEach((item, idx) => {
+    const valDisplay = item.value === 0 && item.isEmpty ? "" : item.value;
+    html += `
+      <td>
+        <input type="number" class="item-value" data-idx="${idx}" min="0" placeholder="0" value="${valDisplay}">
+      </td>
+    `;
+  });
+  html += `
+      <td class="table-sum-value" id="table-sum-value-display">${sumValue}</td>
+    </tr>
+  `;
+
+  // 4행: 지우기 액션 (지우기 | 🗑️ | 🗑️ | 🗑️ | )
+  html += `
+    <tr class="table-action-row">
+      <td class="table-action-label">지우기</td>
+  `;
+  state.data.forEach((item, idx) => {
+    html += `
+      <td>
+        <button type="button" class="btn-delete-col" data-idx="${idx}">🗑️</button>
+      </td>
+    `;
+  });
+  html += `
+      <td></td>
+    </tr>
+  `;
+
+  table.innerHTML = html;
+
+  // 이벤트 핸들러 연결
+  const nameInputs = table.querySelectorAll(".item-name");
+  nameInputs.forEach(input => {
+    input.addEventListener("input", (e) => {
+      const idx = parseInt(e.target.dataset.idx);
+      state.data[idx].name = e.target.value;
+      updateExampleStyle(e.target);
     });
+  });
+
+  const valueInputs = table.querySelectorAll(".item-value");
+  valueInputs.forEach(input => {
+    input.addEventListener("input", (e) => {
+      const idx = parseInt(e.target.dataset.idx);
+      const valStr = e.target.value.trim();
+      if (valStr === "") {
+        state.data[idx].value = 0;
+        state.data[idx].isEmpty = true;
+      } else {
+        state.data[idx].value = parseInt(valStr) || 0;
+        state.data[idx].isEmpty = false;
+      }
+      updateSumAndPreview();
+    });
+  });
+
+  const deleteButtons = table.querySelectorAll(".btn-delete-col");
+  deleteButtons.forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const idx = parseInt(e.currentTarget.dataset.idx);
+      deleteCol(idx);
+    });
+  });
+
+  // 예시값 스타일 일괄 적용
+  table.querySelectorAll("input").forEach(input => {
+    updateExampleStyle(input);
   });
 }
 
-function addRow() {
-  const tbody = document.getElementById("table-body");
-  const rowCount = tbody.rows.length;
+// 합계 실시간 계산 및 그래프 미리보기 연계 함수
+function updateSumAndPreview() {
+  const sumDisplay = document.getElementById("table-sum-value-display");
+  if (sumDisplay) {
+    const sumValue = state.data.reduce((acc, curr) => acc + (curr.value || 0), 0);
+    sumDisplay.textContent = sumValue;
+  }
+  // 실시간 그래프 리렌더링
+  renderGraph();
+}
 
-  if (rowCount >= 10) {
+// 일반 입력 필드 수정 시 가로형 표 라벨 동적 수정
+function updateTableLabels() {
+  syncDataFromTable();
+
+  const titleDisplay = document.getElementById("table-title-cell-display");
+  if (titleDisplay) {
+    titleDisplay.textContent = state.title || "조사 주제를 입력하세요";
+  }
+
+  const itemAxisDisplay = document.getElementById("table-item-axis-display");
+  if (itemAxisDisplay) {
+    itemAxisDisplay.textContent = state.itemAxisName || "항목";
+  }
+
+  const qtyAxisDisplay = document.getElementById("table-qty-axis-display");
+  if (qtyAxisDisplay) {
+    const unitStr = state.unit ? `(${state.unit})` : "";
+    qtyAxisDisplay.textContent = `${state.qtyAxisName || "수량"}${unitStr}`;
+  }
+}
+
+function addRow() {
+  if (state.data.length >= 10) {
     showAlert("항목은 최대 10개까지만 만들 수 있어요! 😮");
     return;
   }
 
-  const newRowIndex = rowCount + 1;
-  // 파스텔톤 컬러를 번호 순서대로 순환하여 자동 배정
-  const defaultColor = PASTEL_COLORS[(newRowIndex - 1) % PASTEL_COLORS.length].hex;
+  const nextIndex = state.data.length + 1;
+  const defaultColor = PASTEL_COLORS[(nextIndex - 1) % PASTEL_COLORS.length].hex;
 
-  const tr = document.createElement("tr");
-  tr.className = "table-row";
-  tr.innerHTML = `
-    <td class="row-num">${newRowIndex}</td>
-    <td><input type="text" class="item-name" placeholder="예) 항목 이름" value=""></td>
-    <td><input type="number" class="item-value" placeholder="예) 5" min="0" value=""></td>
-    <td><button type="button" class="btn-delete" onclick="deleteRow(this)">🗑️</button></td>
-  `;
+  state.data.push({
+    name: "",
+    value: 0,
+    color: defaultColor,
+    isEmpty: true
+  });
 
-  tbody.appendChild(tr);
-
-  // 테이블 내 인풋에 실시간 데이터 리스너 재장착
-  attachTableInputListeners();
-  syncDataFromTable();
+  renderInputTable();
+  renderGraph();
 }
 
-function deleteRow(button) {
-  const tbody = document.getElementById("table-body");
-  const row = button.closest("tr");
-
-  if (tbody.rows.length <= 1) {
+function deleteCol(idx) {
+  if (state.data.length <= 1) {
     showAlert("최소한 1개 이상의 항목은 있어야 해요! 😢");
     return;
   }
 
-  row.remove();
+  state.data.splice(idx, 1);
+  renderInputTable();
+  renderGraph();
+}
 
-  // 번호(번호 열) 재조정
-  Array.from(tbody.rows).forEach((r, idx) => {
-    r.querySelector(".row-num").textContent = idx + 1;
-  });
-
-  syncDataFromTable();
+function deleteRow(button) {
+  // 사용되지 않으나 혹시 모를 에러 방지를 위해 빈 함수로 둡니다.
 }
 
 /**
  * 표 입력란에서 데이터를 파싱하여 state.data에 채워넣음
  */
 function syncDataFromTable() {
-  const tbody = document.getElementById("table-body");
-  const rows = Array.from(tbody.rows);
-
-  // 기존 색상을 보존하기 위해 이전 데이터 맵핑
-  const prevDataMap = {};
-  state.data.forEach(item => {
-    if (item.name) prevDataMap[item.name] = item.color;
-  });
-
-  state.data = rows.map((row, idx) => {
-    let name = row.querySelector(".item-name").value.trim();
-    // '예)' 접두사 제거
-    if (name.startsWith("예)")) {
-      name = name.replace(/^예\)\s*/, "");
-    }
-    const valStr = row.querySelector(".item-value").value.trim();
-    const value = valStr === "" ? 0 : parseInt(valStr);
-
-    // 만약 기존에 지정된 색이 있었으면 그것을 쓰고, 없으면 기본 파스텔색 순환 배정
-    let color = prevDataMap[name];
-    if (!color) {
-      color = PASTEL_COLORS[idx % PASTEL_COLORS.length].hex;
-    }
-
-    return { name, value, color };
-  });
-
   let title = document.getElementById("input-title").value.trim();
   if (title.startsWith("예)")) {
     title = title.replace(/^예\)\s*/, "");
@@ -378,6 +484,12 @@ function renderGraph() {
     const gridLayer = wrapper.querySelector(".grid-lines");
     const barsLayer = wrapper.querySelector(".bars-layer");
     const container = wrapper.querySelector(".graph-container");
+    wrapper.classList.forEach(className => {
+      if (className.startsWith("bg-")) {
+        wrapper.classList.remove(className);
+      }
+    });
+    wrapper.classList.add(state.bgClass);
     const containerOuter = wrapper.querySelector(".graph-container-outer");
     const yAxisContainer = wrapper.querySelector(".y-axis-labels-container");
     const xAxisContainer = wrapper.querySelector(".x-axis-labels-container");
