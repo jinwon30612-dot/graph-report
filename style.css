@@ -865,13 +865,14 @@ input.example-val, textarea.example-val {
 }
 
 /* 짙고 명확한 모눈 격자선 레이어 */
-.grid-lines-layer {
+.grid-lines {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 1;
 }
 
 /* 격자선 스타일 */
@@ -1024,6 +1025,7 @@ input.example-val, textarea.example-val {
   height: 100%;
   display: flex;
   box-sizing: border-box;
+  z-index: 2;
 }
 
 /* 세로 막대그래프일 때 정렬 */
@@ -1522,21 +1524,66 @@ input.example-val, textarea.example-val {
    11. 반응형 레이아웃 대응 (태블릿, 웨일북 등)
 ------------------------------------------------------------- */
 @media (max-width: 1024px) {
+  /* 태블릿 가로(768~1024px)에서는 좌우 2열 배치를 유지하되 여백을 살짝 줄임 */
+  .step-2-layout {
+    grid-template-columns: 1.1fr 1fr;
+    gap: 16px;
+  }
+  .config-panel {
+    height: calc(88vh - 300px);
+    max-height: 480px;
+  }
+  .graph-preview-panel {
+    height: calc(88vh - 300px);
+    max-height: 480px;
+  }
+  .step-slide {
+    padding: 20px;
+  }
+  .app-header {
+    padding: 16px 24px 10px 24px;
+  }
+  .app-title {
+    font-size: 1.8rem;
+  }
+  .app-subtitle {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+  }
+  .step-indicator {
+    max-width: 600px;
+  }
+  .step-dot {
+    width: 90px;
+  }
+  .step-num {
+    width: 36px;
+    height: 36px;
+    font-size: 1.15rem;
+  }
+  .step-text {
+    font-size: 0.85rem;
+  }
+  .step-line {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* 모바일/태블릿 세로(768px 이하)에서는 1열 세로 배치를 수행함 */
   .step-2-layout {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
   .config-panel {
     height: auto;
     max-height: none;
   }
   .graph-preview-panel {
-    height: 450px;
+    height: 400px;
     min-height: auto;
     max-height: none;
   }
-}
-
-@media (max-width: 768px) {
   body {
     padding: 10px;
   }
@@ -1547,21 +1594,77 @@ input.example-val, textarea.example-val {
     min-height: 500px;
   }
   .app-header {
-    padding: 16px;
+    padding: 12px 16px 8px 16px;
   }
   .app-title {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
+  }
+  .app-subtitle {
+    display: none; /* 화면이 아주 작을 때는 부제목 숨김 */
   }
   .step-indicator {
     gap: 4px;
   }
   .step-dot {
-    width: 80px;
+    width: 70px;
   }
   .step-num {
-    width: 36px;
-    height: 36px;
-    font-size: 1.15rem;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+  .step-text {
+    font-size: 0.75rem;
+  }
+  .step-line {
+    margin-bottom: 18px;
+  }
+  .step-slide {
+    padding: 12px;
+  }
+  .app-navigation {
+    padding: 10px 16px;
+  }
+  .btn-nav {
+    padding: 8px 14px;
+    font-size: 0.95rem;
+  }
+  .btn-action {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+  .report-capture-card {
+    padding: 16px;
+  }
+  .plan-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 화면 높이가 낮은 뷰포트 (랩톱, 웨일북, 태블릿 및 창 크기를 줄였을 때 대응) */
+@media (max-height: 800px) {
+  .app-header {
+    padding: 12px 24px 8px 24px;
+  }
+  .app-title {
+    font-size: 1.6rem;
+    margin-bottom: 2px;
+  }
+  .app-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  .step-indicator {
+    max-width: 580px;
+  }
+  .step-dot {
+    width: 90px;
+    gap: 4px;
+  }
+  .step-num {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
   }
   .step-text {
     font-size: 0.8rem;
@@ -1570,24 +1673,11 @@ input.example-val, textarea.example-val {
     margin-bottom: 20px;
   }
   .step-slide {
-    padding: 16px;
+    padding: 12px 24px;
   }
-  .app-navigation {
-    padding: 12px 16px;
-  }
-  .btn-nav {
-    padding: 10px 16px;
-    font-size: 1rem;
-  }
-  .btn-action {
-    padding: 10px 16px;
-    font-size: 0.95rem;
-  }
-  .report-capture-card {
-    padding: 20px;
-  }
-  .plan-grid {
-    grid-template-columns: 1fr;
+  .config-panel, .graph-preview-panel {
+    height: calc(88vh - 280px);
+    min-height: 250px;
   }
 }
 
