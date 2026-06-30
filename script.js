@@ -7,7 +7,7 @@
  * 아래의 PADLET_URL 변수를 수정하면 '패들릿에 공유하기' 버튼 클릭 시 이동할 
  * 학급 전용 패들릿 주소를 손쉽게 변경할 수 있습니다.
  */
-const PADLET_URL = "https://padlet.com/aijne/padlet-3wjbukvugcl702mw";
+const PADLET_URL = "https://padlet.com/jinwon30612/padlet-4rpugtk7fmhpffb3";
 
 
 /**
