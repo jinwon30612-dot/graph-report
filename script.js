@@ -33,14 +33,14 @@ const state = {
   barWidth: 50,               // 막대 두께 (20 ~ 80px)
   bgClass: "bg-white",        // 그래프 배경 스타일 클래스
   data: [
-    { name: "집", value: 4, color: "#ffb3ba" },
-    { name: "공원", value: 6, color: "#ffdfba" },
-    { name: "버스", value: 10, color: "#ffffba" }
+    { name: "예) 집", value: 4, color: "#ffb3ba" },
+    { name: "예) 공원", value: 6, color: "#ffdfba" },
+    { name: "예) 버스", value: 10, color: "#ffffba" }
   ],                          // 1단계에서 가져온 [{ name, value, color }] 형태의 데이터
-  title: "주로 음악을 듣는 장소별 학생 수", // 조사 주제
-  unit: "명",                 // 수량 단위
-  qtyAxisName: "학생 수",       // 수량 축 이름
-  itemAxisName: "장소"         // 항목 축 이름
+  title: "예) 주로 음악을 듣는 장소별 학생 수", // 조사 주제
+  unit: "예) 명",                 // 수량 단위
+  qtyAxisName: "예) 학생 수",       // 수량 축 이름
+  itemAxisName: "예) 장소"         // 항목 축 이름
 };
 
 /**
@@ -193,7 +193,7 @@ function renderInputTable() {
   let html = "";
 
   // 1행: 조사 주제 (가로 전체 병합)
-  const displayTitle = state.title || "조사 주제를 입력하세요";
+  const displayTitle = stripExample(state.title) || "조사 주제를 입력하세요";
   html += `
     <tr class="table-title-row">
       <th colspan="${colCount}" class="table-title-cell" id="table-title-cell-display">${displayTitle}</th>
@@ -201,7 +201,7 @@ function renderInputTable() {
   `;
 
   // 2행: 조사한 항목 이름 (장소 | 집 | 공원 | 버스 | 합계)
-  const displayItemAxis = state.itemAxisName || "항목";
+  const displayItemAxis = stripExample(state.itemAxisName) || "항목";
   html += `
     <tr class="table-item-row">
       <td class="table-axis-label" id="table-item-axis-display">${displayItemAxis}</td>
@@ -219,8 +219,8 @@ function renderInputTable() {
   `;
 
   // 3행: 수량 (학생 수(명) | 4 | 6 | 10 | 20)
-  const qtyName = state.qtyAxisName || "수량";
-  const unitStr = state.unit ? `(${state.unit})` : "";
+  const qtyName = stripExample(state.qtyAxisName) || "수량";
+  const unitStr = state.unit ? `(${stripExample(state.unit)})` : "";
   const displayQtyAxis = `${qtyName}${unitStr}`;
   html += `
     <tr class="table-value-row">
@@ -315,18 +315,18 @@ function updateTableLabels() {
 
   const titleDisplay = document.getElementById("table-title-cell-display");
   if (titleDisplay) {
-    titleDisplay.textContent = state.title || "조사 주제를 입력하세요";
+    titleDisplay.textContent = stripExample(state.title) || "조사 주제를 입력하세요";
   }
 
   const itemAxisDisplay = document.getElementById("table-item-axis-display");
   if (itemAxisDisplay) {
-    itemAxisDisplay.textContent = state.itemAxisName || "항목";
+    itemAxisDisplay.textContent = stripExample(state.itemAxisName) || "항목";
   }
 
   const qtyAxisDisplay = document.getElementById("table-qty-axis-display");
   if (qtyAxisDisplay) {
-    const unitStr = state.unit ? `(${state.unit})` : "";
-    qtyAxisDisplay.textContent = `${state.qtyAxisName || "수량"}${unitStr}`;
+    const unitStr = state.unit ? `(${stripExample(state.unit)})` : "";
+    qtyAxisDisplay.textContent = `${stripExample(state.qtyAxisName) || "수량"}${unitStr}`;
   }
 }
 
@@ -365,33 +365,22 @@ function deleteRow(button) {
   // 사용되지 않으나 혹시 모를 에러 방지를 위해 빈 함수로 둡니다.
 }
 
+// 예시 텍스트 접두사 "예)" 제거 유틸리티
+function stripExample(val) {
+  if (val && typeof val === "string" && val.startsWith("예)")) {
+    return val.replace(/^예\)\s*/, "");
+  }
+  return val;
+}
+
 /**
  * 표 입력란에서 데이터를 파싱하여 state.data에 채워넣음
  */
 function syncDataFromTable() {
-  let title = document.getElementById("input-title").value.trim();
-  if (title.startsWith("예)")) {
-    title = title.replace(/^예\)\s*/, "");
-  }
-  state.title = title;
-
-  let unit = document.getElementById("input-unit").value.trim();
-  if (unit.startsWith("예)")) {
-    unit = unit.replace(/^예\)\s*/, "");
-  }
-  state.unit = unit;
-
-  let qtyAxisName = document.getElementById("input-qty-axis-name").value.trim();
-  if (qtyAxisName.startsWith("예)")) {
-    qtyAxisName = qtyAxisName.replace(/^예\)\s*/, "");
-  }
-  state.qtyAxisName = qtyAxisName;
-
-  let itemAxisName = document.getElementById("input-item-axis-name").value.trim();
-  if (itemAxisName.startsWith("예)")) {
-    itemAxisName = itemAxisName.replace(/^예\)\s*/, "");
-  }
-  state.itemAxisName = itemAxisName;
+  state.title = document.getElementById("input-title").value.trim();
+  state.unit = document.getElementById("input-unit").value.trim();
+  state.qtyAxisName = document.getElementById("input-qty-axis-name").value.trim();
+  state.itemAxisName = document.getElementById("input-item-axis-name").value.trim();
 }
 
 
@@ -426,7 +415,7 @@ function buildColorPickerPanel() {
 
   state.data.forEach((item, itemIdx) => {
     // 항목 이름이 비어있으면 표시 생략
-    const displayName = item.name || `항목 ${itemIdx + 1}`;
+    const displayName = stripExample(item.name) || `항목 ${itemIdx + 1}`;
 
     const pickerRow = document.createElement("div");
     pickerRow.className = "color-picker-row";
@@ -506,10 +495,10 @@ function renderGraph() {
 
     // 타이틀 & 단위 매핑
     if (previewTitle) {
-      previewTitle.textContent = state.title || "(조사 주제 없음)";
+      previewTitle.textContent = stripExample(state.title) || "(조사 주제 없음)";
     }
     if (previewUnit) {
-      previewUnit.textContent = state.unit ? `(단위: ${state.unit})` : "";
+      previewUnit.textContent = state.unit ? `(단위: ${stripExample(state.unit)})` : "";
     }
 
     // 대각선 코너 박스 축 이름 업데이트
@@ -517,11 +506,11 @@ function renderGraph() {
       const verticalLabel = cornerBox.querySelector(".vertical-name");
       const horizontalLabel = cornerBox.querySelector(".horizontal-name");
       if (state.direction === "vertical") {
-        verticalLabel.textContent = state.qtyAxisName || "학생 수";
-        horizontalLabel.textContent = state.itemAxisName || "과일";
+        verticalLabel.textContent = stripExample(state.qtyAxisName) || "학생 수";
+        horizontalLabel.textContent = stripExample(state.itemAxisName) || "장소";
       } else {
-        verticalLabel.textContent = state.itemAxisName || "과일";
-        horizontalLabel.textContent = state.qtyAxisName || "학생 수";
+        verticalLabel.textContent = stripExample(state.itemAxisName) || "장소";
+        horizontalLabel.textContent = stripExample(state.qtyAxisName) || "학생 수";
       }
     }
 
@@ -618,7 +607,7 @@ function renderGraph() {
         // 마우스 오버 툴팁
         const tooltip = document.createElement("div");
         tooltip.className = "bar-tooltip";
-        tooltip.innerHTML = `<strong>${item.name || '(이름 없음)'}</strong><br>${itemVal}${state.unit || ''}`;
+        tooltip.innerHTML = `<strong>${stripExample(item.name) || '(이름 없음)'}</strong><br>${itemVal}${stripExample(state.unit) || ''}`;
         bar.appendChild(tooltip);
 
         barContainer.appendChild(bar);
@@ -630,7 +619,7 @@ function renderGraph() {
         xCell.style.width = `${100 / itemCount}%`;
 
         const labelText = document.createElement("span");
-        labelText.textContent = item.name || `항목 ${idx + 1}`;
+        labelText.textContent = stripExample(item.name) || `항목 ${idx + 1}`;
         xCell.appendChild(labelText);
 
         xAxisContainer.appendChild(xCell);
@@ -702,7 +691,7 @@ function renderGraph() {
         // 마우스 오버 툴팁
         const tooltip = document.createElement("div");
         tooltip.className = "bar-tooltip";
-        tooltip.innerHTML = `<strong>${item.name || '(이름 없음)'}</strong><br>${itemVal}${state.unit || ''}`;
+        tooltip.innerHTML = `<strong>${stripExample(item.name) || '(이름 없음)'}</strong><br>${itemVal}${stripExample(state.unit) || ''}`;
         bar.appendChild(tooltip);
 
         barContainer.appendChild(bar);
@@ -714,7 +703,7 @@ function renderGraph() {
         yCell.style.height = `${100 / itemCount}%`;
 
         const labelText = document.createElement("span");
-        labelText.textContent = item.name || `항목 ${idx + 1}`;
+        labelText.textContent = stripExample(item.name) || `항목 ${idx + 1}`;
         yCell.appendChild(labelText);
 
         yAxisContainer.appendChild(yCell);
