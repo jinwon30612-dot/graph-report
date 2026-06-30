@@ -92,7 +92,9 @@ body {
 .app-container {
   width: 100%;
   max-width: 1200px;
-  min-height: 85vh;
+  height: calc(100vh - 40px);
+  max-height: 900px;
+  min-height: 650px;
   background-color: var(--card-bg);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
@@ -433,7 +435,9 @@ input.example-val, textarea.example-val {
 }
 
 .config-panel {
-  max-height: 60vh;
+  height: calc(88vh - 340px);
+  min-height: 320px;
+  max-height: 540px;
   overflow-y: auto;
 }
 
@@ -645,7 +649,9 @@ input.example-val, textarea.example-val {
 .graph-preview-panel {
   display: flex;
   flex-direction: column;
-  height: 60vh;
+  height: calc(88vh - 340px);
+  min-height: 320px;
+  max-height: 540px;
 }
 
 .graph-preview-panel .card-body {
@@ -1485,10 +1491,13 @@ input.example-val, textarea.example-val {
     grid-template-columns: 1fr;
   }
   .config-panel {
+    height: auto;
     max-height: none;
   }
   .graph-preview-panel {
     height: 450px;
+    min-height: auto;
+    max-height: none;
   }
 }
 
@@ -1498,6 +1507,9 @@ input.example-val, textarea.example-val {
   }
   .app-container {
     border-width: 3px;
+    height: calc(100vh - 20px);
+    max-height: none;
+    min-height: 500px;
   }
   .app-header {
     padding: 16px;
