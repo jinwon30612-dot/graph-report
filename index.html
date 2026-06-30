@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>우당탕탕 막대그래프 보고서 만들기 📊</title>
   <!-- Google Fonts - NanumSquareRound 대체 및 Pretendard & Gowun Dodum 로드 -->
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
   <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
   <!-- html2canvas CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="app-container">
     <!-- 상단 헤더 -->
     <header class="app-header">
       <h1 class="app-title">📊 나만의 막대그래프 보고서 만들기</h1>
       <p class="app-subtitle">조사한 자료를 멋진 막대그래프로 만들고 보고서로 완성해 봐요!</p>
-      
+
       <!-- 단계 인디케이터 -->
       <div class="step-indicator">
         <div class="step-dot active" id="dot-1">
@@ -45,7 +48,7 @@
     <!-- 메인 슬라이드 컨테이너 -->
     <main class="slider-viewport">
       <div class="slider-wrapper" id="slider-wrapper">
-        
+
         <!-- Step 1: 자료 입력 (표) -->
         <section class="step-slide" id="step-1-slide">
           <div class="card">
@@ -122,7 +125,7 @@
         <!-- Step 2: 그래프 모양 잡기 -->
         <section class="step-slide" id="step-2-slide">
           <div class="step-2-layout">
-            
+
             <!-- 왼쪽: 그래프 모양 설정 패널 -->
             <div class="card config-panel">
               <div class="card-header bg-pastel-green">
@@ -191,13 +194,14 @@
                 <!-- 실시간 그래프 컴포넌트 래퍼 -->
                 <div class="graph-wrapper preview-graph-wrapper" id="preview-graph-wrapper-step2">
                   <div class="graph-title-label">우리 반 학생들이 좋아하는 과일</div>
-                  
+
                   <!-- 눈금선이 들어갈 핵심 모눈 그래프 판 -->
                   <div class="graph-container-outer">
                     <div class="graph-unit-label">(단위: 명)</div>
                     <!-- Y축/X축 명을 나타내는 대각선 코너 박스 -->
                     <div class="axis-corner-box">
-                      <svg class="corner-svg" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 100 100">
+                      <svg class="corner-svg" width="100%" height="100%" preserveAspectRatio="none"
+                        viewBox="0 0 100 100">
                         <line x1="0" y1="100" x2="100" y2="0" stroke="var(--gray-800)" stroke-width="3" />
                       </svg>
                       <span class="corner-label vertical-name">학생 수</span>
@@ -222,7 +226,7 @@
         <!-- Step 3: 그래프 꾸미기 -->
         <section class="step-slide" id="step-3-slide">
           <div class="step-2-layout">
-            
+
             <!-- 왼쪽: 그래프 꾸미기 설정 패널 -->
             <div class="card config-panel">
               <div class="card-header bg-pastel-green">
@@ -251,11 +255,16 @@
                 <div class="config-section">
                   <h3 class="config-title">🖼️ 그래프 배경 스타일</h3>
                   <div class="bg-selector">
-                    <button type="button" class="btn-bg-color active" data-bg="bg-white" style="background-color: #ffffff; border: 2px solid #ccc;"></button>
-                    <button type="button" class="btn-bg-color" data-bg="bg-cream" style="background-color: #fdfaf2;"></button>
-                    <button type="button" class="btn-bg-color" data-bg="bg-mint" style="background-color: #f2faf8;"></button>
-                    <button type="button" class="btn-bg-color" data-bg="bg-sky" style="background-color: #f2f7fa;"></button>
-                    <button type="button" class="btn-bg-color" data-bg="bg-pink" style="background-color: #faf2f6;"></button>
+                    <button type="button" class="btn-bg-color active" data-bg="bg-white"
+                      style="background-color: #ffffff; border: 2px solid #ccc;"></button>
+                    <button type="button" class="btn-bg-color" data-bg="bg-cream"
+                      style="background-color: #fdfaf2;"></button>
+                    <button type="button" class="btn-bg-color" data-bg="bg-mint"
+                      style="background-color: #f2faf8;"></button>
+                    <button type="button" class="btn-bg-color" data-bg="bg-sky"
+                      style="background-color: #f2f7fa;"></button>
+                    <button type="button" class="btn-bg-color" data-bg="bg-pink"
+                      style="background-color: #faf2f6;"></button>
                   </div>
                 </div>
               </div>
@@ -271,13 +280,14 @@
                 <!-- 실시간 그래프 컴포넌트 래퍼 -->
                 <div class="graph-wrapper preview-graph-wrapper" id="preview-graph-wrapper-step3">
                   <div class="graph-title-label">우리 반 학생들이 좋아하는 과일</div>
-                  
+
                   <!-- 눈금선이 들어갈 핵심 모눈 그래프 판 -->
                   <div class="graph-container-outer">
                     <div class="graph-unit-label">(단위: 명)</div>
                     <!-- Y축/X축 명을 나타내는 대각선 코너 박스 -->
                     <div class="axis-corner-box">
-                      <svg class="corner-svg" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 100 100">
+                      <svg class="corner-svg" width="100%" height="100%" preserveAspectRatio="none"
+                        viewBox="0 0 100 100">
                         <line x1="0" y1="100" x2="100" y2="0" stroke="var(--gray-800)" stroke-width="3" />
                       </svg>
                       <span class="corner-label vertical-name">학생 수</span>
@@ -302,27 +312,31 @@
         <!-- Step 4: 보고서 작성 및 완성 -->
         <section class="step-slide" id="step-4-slide">
           <div class="step-3-layout">
-            
+
             <!-- 최종 보고서 출력 영역 (이 부분만 캡처하여 저장합니다) -->
             <div class="report-capture-card" id="report-capture-area">
               <div class="report-header">
                 <div class="report-ribbon">✏️ 수학 탐구 보고서</div>
                 <h1 class="report-main-title" id="report-title-display">우리 반 학생들이 좋아하는 과일</h1>
                 <div class="report-meta">
-                  <span class="meta-item"><strong>소속:</strong> <input type="text" class="inline-meta-input" placeholder="학급 입력 (예: 4학년 3반)" value="예) 4학년 3반"></span>
-                  <span class="meta-item"><strong>이름:</strong> <input type="text" class="inline-meta-input" placeholder="이름 입력" value="예) 김사랑"></span>
-                  <span class="meta-item"><strong>날짜:</strong> <input type="text" class="inline-meta-input" id="report-date" value="2026-06-29"></span>
+                  <span class="meta-item"><strong>소속:</strong> <input type="text" class="inline-meta-input"
+                      placeholder="학급 입력 (예: 4학년 3반)" value="예) 4학년 3반"></span>
+                  <span class="meta-item"><strong>이름:</strong> <input type="text" class="inline-meta-input"
+                      placeholder="이름 입력" value="예) 김사랑"></span>
+                  <span class="meta-item"><strong>날짜:</strong> <input type="text" class="inline-meta-input"
+                      id="report-date" value="2026-06-29"></span>
                 </div>
               </div>
 
               <div class="report-body">
                 <!-- 조사 계획 영역 (빈칸 채우기) -->
                 <div class="report-section plan-section">
-                  <h3 class="section-title"><span class="section-title-icon">📌</span> 1. 조사 계획 세우기</h3>
+                  <h3 class="section-title"><span class="section-title-icon">📌</span> 1. 조사 계획서</h3>
                   <div class="plan-grid">
                     <div class="plan-item">
                       <span class="plan-label">조사 목적</span>
-                      <input type="text" class="plan-input" placeholder="예) 우리 반 친구들이 가장 좋아하는 과일이 무엇인지 알아보려고" value="예) 우리 반 친구들이 가장 좋아하는 과일이 무엇인지 알아보기 위해">
+                      <input type="text" class="plan-input" placeholder="예) 우리 반 친구들이 가장 좋아하는 과일이 무엇인지 알아보려고"
+                        value="예) 우리 반 친구들이 가장 좋아하는 과일이 무엇인지 알아보기 위해">
                     </div>
                     <div class="plan-item">
                       <span class="plan-label">조사 대상</span>
@@ -330,11 +344,13 @@
                     </div>
                     <div class="plan-item">
                       <span class="plan-label">조사 기간</span>
-                      <input type="text" class="plan-input" placeholder="예) 2026년 6월 30일부터 7월 1일" value="예) 2026년 6월 30일부터 7월 1일">
+                      <input type="text" class="plan-input" placeholder="예) 2026년 6월 30일부터 7월 1일"
+                        value="예) 2026년 6월 30일부터 7월 1일">
                     </div>
                     <div class="plan-item">
                       <span class="plan-label">조사 방법</span>
-                      <input type="text" class="plan-input" placeholder="예) 설문지 스티커 붙이기, 거수로 조사 등" value="예) 칠판에 붙인 과일 그림에 붙임쪽지 붙이기">
+                      <input type="text" class="plan-input" placeholder="예) 설문지 스티커 붙이기, 거수로 조사 등"
+                        value="예) 칠판에 붙인 과일 그림에 붙임쪽지 붙이기">
                     </div>
                   </div>
                 </div>
@@ -349,7 +365,7 @@
 
                 <!-- 조사 후 알게 된 점 (서술형) -->
                 <div class="report-section analysis-section">
-                  <h3 class="section-title"><span class="section-title-icon">💡</span> 3. 조사하여 알게 된 점 및 느낀 점</h3>
+                  <h3 class="section-title"><span class="section-title-icon">💡</span> 3. 그래프를 보고 알게된 점 및 느낀 점</h3>
                   <div class="analysis-body">
                     <textarea class="analysis-textarea" id="analysis-textarea" placeholder="막대그래프를 보고 알게 된 점을 자세히 써 봐요. 
 예) 
@@ -359,12 +375,12 @@
                   </div>
                 </div>
               </div>
-              
+
               <div class="report-footer">
                 <p>멋지게 완성된 보고서입니다! 패들릿에 공유하여 친구들과 비교해 봐요. 🎉</p>
               </div>
             </div>
-            
+
           </div>
         </section>
 
@@ -378,7 +394,7 @@
           <span class="arrow">◀</span> 이전 단계로
         </button>
       </div>
-      
+
       <div class="nav-center">
         <!-- 3단계에서 노출될 특수 기능 버튼들 -->
         <div class="step3-actions" id="step3-actions" style="display: none;">
@@ -417,4 +433,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>
