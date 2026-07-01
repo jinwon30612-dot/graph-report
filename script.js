@@ -33,9 +33,9 @@ const state = {
   barWidth: 50,               // 막대 두께 (20 ~ 80px)
   bgClass: "bg-white",        // 그래프 배경 스타일 클래스
   data: [
-    { name: "예) 집", value: 4, color: "#ffb3ba" },
-    { name: "예) 공원", value: 6, color: "#ffdfba" },
-    { name: "예) 버스", value: 10, color: "#ffffba" }
+    { name: "예) 집", value: 4, color: "#ffb3ba", isExampleValue: true },
+    { name: "예) 공원", value: 6, color: "#ffdfba", isExampleValue: true },
+    { name: "예) 버스", value: 10, color: "#ffffba", isExampleValue: true }
   ],                          // 1단계에서 가져온 [{ name, value, color }] 형태의 데이터
   title: "예) 주로 음악을 듣는 장소별 학생 수", // 조사 주제
   unit: "예) 명",                 // 수량 단위
@@ -127,7 +127,32 @@ document.addEventListener("DOMContentLoaded", () => {
   // '예) ...' 형태의 예시 텍스트 포커스 시 자동 삭제 및 블러 시 복원 기능
   document.addEventListener("focusin", (e) => {
     const target = e.target;
-    if ((target.tagName === "INPUT" && target.type === "text") || target.tagName === "TEXTAREA") {
+    if (target.tagName === "INPUT") {
+      if (target.type === "number" && target.dataset.isExample === "true") {
+        if (!target.dataset.defaultValue) {
+          target.dataset.defaultValue = target.value;
+        }
+        target.value = "";
+        target.dataset.isExample = "false";
+        
+        // Sync with state.data
+        const idx = parseInt(target.dataset.idx);
+        if (!isNaN(idx) && state.data[idx]) {
+          state.data[idx].isExampleValue = false;
+          state.data[idx].value = 0;
+          state.data[idx].isEmpty = true;
+          updateSumAndPreview();
+        }
+        
+        updateExampleStyle(target);
+      } else if (target.type === "text" && target.value.startsWith("예)")) {
+        if (!target.dataset.defaultValue) {
+          target.dataset.defaultValue = target.value;
+        }
+        target.value = "";
+        updateExampleStyle(target);
+      }
+    } else if (target.tagName === "TEXTAREA") {
       if (target.value.startsWith("예)")) {
         if (!target.dataset.defaultValue) {
           target.dataset.defaultValue = target.value;
@@ -140,7 +165,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("focusout", (e) => {
     const target = e.target;
-    if ((target.tagName === "INPUT" && target.type === "text") || target.tagName === "TEXTAREA") {
+    if (target.tagName === "INPUT") {
+      if (target.type === "number") {
+        if (target.value.trim() === "" && target.dataset.defaultValue) {
+          target.value = target.dataset.defaultValue;
+          target.dataset.isExample = "true";
+          
+          // Sync back to state.data
+          const idx = parseInt(target.dataset.idx);
+          if (!isNaN(idx) && state.data[idx]) {
+            state.data[idx].isExampleValue = true;
+            state.data[idx].value = parseInt(target.dataset.defaultValue) || 0;
+            state.data[idx].isEmpty = false;
+            updateSumAndPreview();
+          }
+        }
+        updateExampleStyle(target);
+      } else if (target.type === "text") {
+        if (target.value.trim() === "" && target.dataset.defaultValue) {
+          target.value = target.dataset.defaultValue;
+        }
+        updateExampleStyle(target);
+      }
+    } else if (target.tagName === "TEXTAREA") {
       if (target.value.trim() === "" && target.dataset.defaultValue) {
         target.value = target.dataset.defaultValue;
       }
@@ -150,7 +197,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 사용자가 직접 입력 시 실시간으로 예시 스타일(색상) 업데이트
   document.addEventListener("input", (e) => {
-    updateExampleStyle(e.target);
+    const target = e.target;
+    if (target.tagName === "INPUT" && target.type === "number") {
+      target.dataset.isExample = "false";
+      const idx = parseInt(target.dataset.idx);
+      if (!isNaN(idx) && state.data[idx]) {
+        state.data[idx].isExampleValue = false;
+      }
+    }
+    updateExampleStyle(target);
   });
 
   // 페이지 로드 시 기존 예시값들의 스타일 일괄 적용
@@ -164,10 +219,18 @@ document.addEventListener("DOMContentLoaded", () => {
  */
 function updateExampleStyle(input) {
   if (input && (input.tagName === "INPUT" || input.tagName === "TEXTAREA")) {
-    if (input.value && input.value.startsWith("예)")) {
-      input.classList.add("example-val");
+    if (input.type === "number") {
+      if (input.dataset.isExample === "true") {
+        input.classList.add("example-val");
+      } else {
+        input.classList.remove("example-val");
+      }
     } else {
-      input.classList.remove("example-val");
+      if (input.value && input.value.startsWith("예)")) {
+        input.classList.add("example-val");
+      } else {
+        input.classList.remove("example-val");
+      }
     }
   }
 }
@@ -228,9 +291,10 @@ function renderInputTable() {
   `;
   state.data.forEach((item, idx) => {
     const valDisplay = item.value === 0 && item.isEmpty ? "" : item.value;
+    const isExampleAttr = item.isExampleValue ? 'data-is-example="true"' : '';
     html += `
       <td>
-        <input type="number" class="item-value" data-idx="${idx}" min="0" placeholder="0" value="${valDisplay}">
+        <input type="number" class="item-value" data-idx="${idx}" min="0" placeholder="0" value="${valDisplay}" ${isExampleAttr}>
       </td>
     `;
   });
@@ -273,6 +337,8 @@ function renderInputTable() {
     input.addEventListener("input", (e) => {
       const idx = parseInt(e.target.dataset.idx);
       const valStr = e.target.value.trim();
+      state.data[idx].isExampleValue = false;
+      e.target.dataset.isExample = "false";
       if (valStr === "") {
         state.data[idx].value = 0;
         state.data[idx].isEmpty = true;
